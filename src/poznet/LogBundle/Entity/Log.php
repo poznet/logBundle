@@ -37,6 +37,12 @@ class Log
     private $user;
 
     /**
+     * @var
+     * @ORM\Column(name="user_id", type="integer",  nullable=true)
+     */
+    private $userId;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="ip", type="text", length=255 , nullable=true)
@@ -56,6 +62,12 @@ class Log
      * @ORM\Column(name="object", type="text", length=255 , nullable=true)
      */
     private $object;
+
+    /**
+     * @var
+     * @ORM\Column(name="object_id", type="integer",  nullable=true)
+     */
+    private $objectId;
 
     /**
      * @var string
@@ -216,6 +228,38 @@ class Log
     public function setIp($ip)
     {
         $this->ip = $ip;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param mixed $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjectId()
+    {
+        return $this->objectId;
+    }
+
+    /**
+     * @param mixed $objectId
+     */
+    public function setObjectId($objectId)
+    {
+        $this->objectId = $objectId;
     }
 
 

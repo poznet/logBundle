@@ -15,6 +15,7 @@ use FOS\UserBundle\Event\UserEvent;
 use FOS\UserBundle\FOSUserEvents;
 use poznet\LogBundle\Entity\Log;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -37,28 +38,55 @@ class FosUserSubscriber implements EventSubscriberInterface
             FOSUserEvents::CHANGE_PASSWORD_SUCCESS =>'onPasswordReset',
 
             FOSUserEvents::SECURITY_IMPLICIT_LOGIN => 'onLogin',
-            FOSUserEvents::USER_CREATED => 'onNewUser',
-            SecurityEvents::INTERACTIVE_LOGIN =>'onLogin'
+            FOSUserEvents::USER_CREATED => 'onNewFOSUser',
+            'new.user'=>'onNewUser',
+            SecurityEvents::INTERACTIVE_LOGIN =>'onLogin',
         ];
     }
 
 
-    public function onPasswordReset(FormEvent $event){
-
+    public function onPasswordReset(\FOS\UserBundle\Event\FormEvent $event){
+        $user=$this->tokenStorage->getToken()->getUser();
+        $log=new Log();
+        $log->setUser($user);
+        $log->setUserId($user->getId());
+        $log->setAction('password change');
+        $log->setDescription("User ".$user->getUsername(). ' changed password');
+        $this->em->persist($log);
+        $this->em->flush($log);
     }
 
     public function onLogin(InteractiveLoginEvent $event){
         $user=$event->getAuthenticationToken()->getUser();
         $log=new Log();
         $log->setUser($user);
+        $log->setUserId($user->getId());
         $log->setAction('login');
         $log->setDescription("User ".$user->getUsername(). ' logged in');
         $this->em->persist($log);
         $this->em->flush($log);
     }
 
-    public function onNewUser(FormEvent $event){
+    public function onNewFOSUser(\FOS\UserBundle\Event\FormEvent $event){
+        $data=$event->getForm()->getData();
+        //TODO
+}
 
+    /**
+     * @param $event
+     * For custom events
+     * event should have form (with  registration form content, and user entity should be based  on baseuser (username field)
+     */
+    public function onNewUser($event){
+        $user=$event->getForm()->getData();
+        $user2=$event->getAuthenticationToken()->getUser();
+        $log=new Log();
+        $log->setUser($user);
+        $log->setUserId($user->getId());
+        $log->setAction('new account');
+        $log->setDescription("User ".$user->getUsername(). 'account created by '.$user2->getUsername().' ');
+        $this->em->persist($log);
+        $this->em->flush($log);
     }
 
 
