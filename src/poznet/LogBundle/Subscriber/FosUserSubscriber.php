@@ -79,7 +79,7 @@ class FosUserSubscriber implements EventSubscriberInterface
      */
     public function onNewUser($event){
         $user=$event->getForm()->getData();
-        $user2=$event->getAuthenticationToken()->getUser();
+        $user2=$this->tokenStorage->getToken()->getUser();
         $log=new Log();
         $log->setUser($user);
         $log->setUserId($user->getId());
