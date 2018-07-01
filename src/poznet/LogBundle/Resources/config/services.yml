@@ -5,3 +5,7 @@ services:
           arguments: ['@doctrine.orm.entity_manager','@security.token_storage']
           tags:
               - { name: kernel.event_subscriber }
+
+      poznet.log:
+          class: poznet\LogBundle\Service\LogService
+          arguments: ['@doctrine.orm.entity_manager']

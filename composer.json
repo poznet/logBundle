@@ -1,0 +1,15 @@
+{
+    "name": "pozyc/log-bundle",
+    "description": "Bundle for login  indb",
+    "type": "symfonybundle",
+    "require": {
+        "knplabs/knp-paginator-bundle": "^2.8"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michał Glajc",
+            "email": "pozycjoner.net@gmail.com"
+        }
+    ]
+}
