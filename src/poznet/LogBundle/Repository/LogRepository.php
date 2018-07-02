@@ -10,4 +10,36 @@ namespace poznet\LogBundle\Repository;
  */
 class LogRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    private function unserial($tab,$field){
+
+        foreach($tab as &$t){
+            $t[$field]=unserialize($t[$field]);
+        }
+
+        return  $tab ;
+    }
+
+    public function findAllUser()
+    {
+        $result= $this->getEntityManager()
+            ->createQuery(
+                'SELECT DISTINCT  l.user FROM poznetLogBundle:Log l
+                  GROUP BY l.userId'
+            )
+            ->getArrayResult();
+        return $this->unserial($result,'user');
+    }
+
+    public function findAllObject()
+    {
+        $result= $this->getEntityManager()
+            ->createQuery(
+                'SELECT DISTINCT l.object FROM poznetLogBundle:Log l
+                  GROUP BY l.objectId
+ '
+            )
+            ->getArrayResult();
+        return $this->unserial($result,'object');
+    }
 }
