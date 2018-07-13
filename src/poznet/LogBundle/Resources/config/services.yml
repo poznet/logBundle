@@ -6,6 +6,12 @@ services:
           tags:
               - { name: kernel.event_subscriber }
 
+      poznet_log.subscriber.doctrine:
+          class: poznet\LogBundle\Subscriber\DoctrineSubscriber
+          arguments: ['@security.token_storage']
+          tags:
+              - { name: doctrine.event_subscriber}
+
       poznet.log:
           class: poznet\LogBundle\Service\LogService
           arguments: ['@doctrine.orm.entity_manager']
