@@ -41,6 +41,8 @@ class DoctrineSubscriber implements EventSubscriber
     {
         $em = $args->getObjectManager();
         $entity = $args->getEntity();
+        if($this->tokenStorage->getToken() === null)
+            return ;
         $user = $this->tokenStorage->getToken()->getUser();
         $class = get_class($entity);
         $log = new Log();
@@ -61,6 +63,8 @@ class DoctrineSubscriber implements EventSubscriber
         $entity = $args->getEntity();
         if($entity instanceof Log)
             return  ;
+        if($this->tokenStorage->getToken() === null)
+            return ;
         $user = $this->tokenStorage->getToken()->getUser();
         $class = get_class($entity);
         $log = new Log();
